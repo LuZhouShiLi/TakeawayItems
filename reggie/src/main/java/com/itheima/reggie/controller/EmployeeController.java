@@ -74,26 +74,45 @@ public class EmployeeController {
 
     /**
      * 新增员工
+     * 页面发送ajax请求 将新增员工页面中输入的数据以json对象的形式提交到服务端
+     * 服务端Controller接受页面提交的数据并且调用Service 将数据 进行保存
+     * Service 调用mAPPER操作数据库  保存数据、
+     * RequestBody 保证请求的数据是json对象格式发送的
      * @param employee
      * @return
      */
     @PostMapping
     public R<String> save(HttpServletRequest request,@RequestBody Employee employee){
+        // 在这里打断点  发送的请求 执行到这里 停止
         log.info("新增员工，员工信息：{}",employee.toString());
 
-        //设置初始密码123456，需要进行md5加密处理
+        // 设置初始密码  123456  需要进行Md5加密处理
         employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
 
         employee.setCreateTime(LocalDateTime.now());
         employee.setUpdateTime(LocalDateTime.now());
 
-        //获得当前登录用户的id
-        Long empId = (Long) request.getSession().getAttribute("employee");
+        // 获得当前登录用户的id
+        Long emp = (Long)request.getSession().getAttribute("employee");// 从session获取当前登录用户
 
-        employee.setCreateUser(empId);
-        employee.setUpdateUser(empId);
+        employee.setCreateUser(emp);
+        employee.setUpdateUser(emp);
 
-        employeeService.save(employee);
+        employeeService.save(employee);// 保存结果  调用service接口
+
+//        //设置初始密码123456，需要进行md5加密处理
+//        employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
+//
+//        employee.setCreateTime(LocalDateTime.now());
+//        employee.setUpdateTime(LocalDateTime.now());
+//
+//        //获得当前登录用户的id
+//        Long empId = (Long) request.getSession().getAttribute("employee");
+//
+//        employee.setCreateUser(empId);
+//        employee.setUpdateUser(empId);
+//
+//        employeeService.save(employee);
 
         return R.success("新增员工成功");
     }

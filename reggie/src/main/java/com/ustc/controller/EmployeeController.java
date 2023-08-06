@@ -75,4 +75,19 @@ public class EmployeeController {
         return R.success("退出成功");
     }
 
+    /**
+     * 新增员工
+     * 梳理一下流程
+     * 页面发送ajax请求  将新增员工页面中输入的数据以json的形式提交到服务端
+     * 服务端Controller接受页面提交的数据并且调用Service将数据进行保存
+     * Service调用Mapper操作数据库  保存数据
+     * @param employee
+     * @return
+     */
+    @PostMapping
+    public R<String> save(@RequestBody Employee employee){
+        log.info("新增员工,员工信息:{}",employee.toString());
+        return  null;
+    }
+
 }
