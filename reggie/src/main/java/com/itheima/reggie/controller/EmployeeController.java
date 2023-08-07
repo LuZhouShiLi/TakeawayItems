@@ -184,17 +184,50 @@ public class EmployeeController {
      * @param employee
      * @return
      */
+//    @PutMapping
+//    public R<String> update(HttpServletRequest request,@RequestBody Employee employee){
+//        log.info(employee.toString());
+//
+//        Long empId = (Long)request.getSession().getAttribute("employee");
+//        employee.setUpdateTime(LocalDateTime.now());
+//        employee.setUpdateUser(empId);
+//        employeeService.updateById(employee);
+//
+//        return R.success("员工信息修改成功");
+//    }
+
+    /**
+     * 根据id修改员工的信息
+     * 页面发送ajax请求，将参数 id status 提交到服务器   json对象
+     * 服务端Controller 接受页面提交的数据 并且调用Service 更新数据
+     * Service 调用Mapper操作数据库
+     *
+     * 页面传输的id 需要转换成字符串形式  防止 精度确实
+     * @param employee
+     * @return
+     */
     @PutMapping
     public R<String> update(HttpServletRequest request,@RequestBody Employee employee){
-        log.info(employee.toString());
 
-        Long empId = (Long)request.getSession().getAttribute("employee");
+        // 前端点击禁用按钮  ajax发送一个请求 将员工信息 封装起来  发送给服务器  但是前端只传输 id 和status 这两个字段  其他的字段都是空
+        log.info((employee.toString()));
+
+
+        // 填充一些其他信息
         employee.setUpdateTime(LocalDateTime.now());
-        employee.setUpdateUser(empId);
-        employeeService.updateById(employee);
+
+        // 从session获取当前用户的id
+        Long employee1 = (Long) request.getSession().getAttribute("employee");
+        employee.setUpdateUser(employee1);
+
+
+        employeeService.updateById(employee);// 调用service接口  修改员工信息
 
         return R.success("员工信息修改成功");
     }
+
+
+
 
     /**
      * 根据id查询员工信息
