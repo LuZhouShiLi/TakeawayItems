@@ -117,6 +117,41 @@ public class EmployeeController {
         return R.success("新增员工成功");
     }
 
+    // 分页查询
+    /**
+     * 页面发送ajax请求  将分页查询参数 page pageSize name提交到服务端
+     * 服务端Controller接受页面提交的数据并且调用service 查询数据
+     * Service 调用Mapper 操作数据库 查询分页数据
+     * Controller 将查询到的分页数据相应给页面
+     * 页面接收到页面数据并且通过elementUI的组件 展示到页面上
+     * @param page
+     * @param pageSize
+     * @param name
+     * @return
+     */
+    @GetMapping("/pages")
+    public R<Page> pages(int page,int pageSize,String name){
+
+        log.info("page = {},pageSize = {},name = {}",page,pageSize,name);
+
+        // 构造分页构造器
+        Page pageInfo = new Page(page,pageSize);
+
+        // 构造条件构造器  需要指定泛型
+        LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
+
+        // 添加过滤条件
+        queryWrapper.like(StringUtils.isNotEmpty(name),Employee::getName,name);
+
+        // 添加排序条件
+        queryWrapper.orderByDesc(Employee::getUpdateTime);
+
+        // 执行查询
+        employeeService.page(pageInfo,queryWrapper);
+
+        return R.success(pageInfo);
+    }
+
     /**
      * 员工信息分页查询
      * @param page
