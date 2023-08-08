@@ -53,7 +53,8 @@ public class Category implements Serializable {
     private Long updateUser;
 
 
-    //是否删除
+    //是否删除  不存在字段
+    @TableField(value="isDeleted",select = false)
     private Integer isDeleted;
 
 }
