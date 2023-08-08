@@ -203,6 +203,8 @@ public class EmployeeController {
      * Service 调用Mapper操作数据库
      *
      * 页面传输的id 需要转换成字符串形式  防止 精度确实
+     *
+     * 编辑员工信息之后 点击确定之后 也会调用update  将表单信息封装成Json对象
      * @param employee
      * @return
      */
@@ -212,17 +214,13 @@ public class EmployeeController {
         // 前端点击禁用按钮  ajax发送一个请求 将员工信息 封装起来  发送给服务器  但是前端只传输 id 和status 这两个字段  其他的字段都是空
         log.info((employee.toString()));
 
-
         // 填充一些其他信息
         employee.setUpdateTime(LocalDateTime.now());
-
         // 从session获取当前用户的id
         Long employee1 = (Long) request.getSession().getAttribute("employee");
         employee.setUpdateUser(employee1);
 
-
         employeeService.updateById(employee);// 调用service接口  修改员工信息
-
         return R.success("员工信息修改成功");
     }
 
@@ -231,16 +229,31 @@ public class EmployeeController {
 
     /**
      * 根据id查询员工信息
+     * 点击编辑按钮  首先页面就会根据员工的Id 发送一个请求  进行回显操作 也就是查询员工的信息
      * @param id
      * @return
      */
+
     @GetMapping("/{id}")
     public R<Employee> getById(@PathVariable Long id){
-        log.info("根据id查询员工信息...");
+        // 根据员工id来查询员工信息
+        log.info("根据员工Id查询信息");
         Employee employee = employeeService.getById(id);
+
         if(employee != null){
-            return R.success(employee);
+            return R.success(employee);// 返回code 1  msg  null  data就是对象
         }
-        return R.error("没有查询到对应员工信息");
+
+
+        return R.error("没有查询到员工信息");
     }
+//    @GetMapping("/{id}")
+//    public R<Employee> getById(@PathVariable Long id){
+//        log.info("根据id查询员工信息...");
+//        Employee employee = employeeService.getById(id);
+//        if(employee != null){
+//            return R.success(employee);
+//        }
+//        return R.error("没有查询到对应员工信息");
+//    }
 }
