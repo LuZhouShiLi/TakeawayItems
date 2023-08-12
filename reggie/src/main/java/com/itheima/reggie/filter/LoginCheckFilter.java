@@ -29,12 +29,13 @@ public  class LoginCheckFilter implements Filter{
         // 获取本次请求的url
         String requestURL = request.getRequestURI();
 
-        // 定义不需要处理的请求路径
+        // 定义不需要处理的请求路径  这里直接过滤  不需要登录
         String[] urls = new String[]{
                 "/employee/login",
                 "/employee/logout",
                 "/backend/**",
-                "/front/**"
+                "/front/**",
+                "/common/**"
         };// 数组的初始化  直接初始化
 
         // 判断本次请求是否需要处理
