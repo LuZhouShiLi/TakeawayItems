@@ -4,12 +4,18 @@ package com.itheima.reggie.controller;
 import com.ustc.common.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -18,7 +24,7 @@ import java.util.UUID;
 @Slf4j
 public class CommonController {
 
-    // 取出路径  文件上传路径 配置到yml文件中
+    // 取出路径  文件上传路径 配置到yml文件中  使用value 注解 从yml 配置文件中 取出文件配置  然后赋值给basePath
     @Value("${reggie.path")
     private String basePath;
 
@@ -48,4 +54,30 @@ public class CommonController {
         file.transferTo(new File(basePath+ fileName));
         return R.success(fileName);
     }
+
+    @GetMapping("/download")
+    public void download(String name, HttpServletResponse response) throws IOException {
+
+//         使用输入流读取指定文件的内容
+        FileInputStream fileInputStream = new FileInputStream(new File(basePath + name));
+
+        // 输出流  通过输出流将文件协会服务器  在浏览器展示图片
+
+        ServletOutputStream outputStream = response.getOutputStream();
+
+        response.setContentType("/image/png");
+
+        int len  = 0;
+        byte[] bytes = new byte[1024];// 每次读取1024个字节
+        while((len = fileInputStream.read(bytes)) != -1){
+
+//           想输出流中写入长度为1024个字节
+            outputStream.write(bytes,0,len);
+
+            outputStream.flush();// 清除缓存
+        }
+
+    }
+
+
 }
