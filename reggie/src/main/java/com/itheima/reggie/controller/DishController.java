@@ -90,11 +90,13 @@ public class DishController {
             BeanUtils.copyProperties(item, dishDto);
             Long categoryId = item.getCategoryId();// 分类
             Category byId = categoryService.getById(categoryId);// 查询分类
-            String name1 = byId.getName();
-            dishDto.setCategoryName(name1);
+
+            if(byId != null){
+                String name1 = byId.getName();
+                dishDto.setCategoryName(name1);
+            }
 
             return dishDto;
-
         }).collect(Collectors.toList());
 
 
