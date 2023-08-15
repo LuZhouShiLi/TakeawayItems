@@ -133,19 +133,25 @@ public class DishController {
         return R.success("新增菜品成功");
     }
 
+    /**
+     * 根据条件查询对应的菜品数据  也就是根据菜品分类查询菜
+     * @param dish
+     * @return
+     */
     @GetMapping("/list")
     public R<List<Dish>>  list(Dish dish){
         // 构造查询条件
-
         LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
+
+        // 查询条件 等职查询 使用id  也就是根据菜品种类id
         queryWrapper.eq(dish.getCategoryId() != null,Dish::getCategoryId,dish.getCategoryId());
 
-        // 添加条件 查询状态是1 起售状态的菜品
-        queryWrapper.eq(Dish::getStatus,1);
-
+        // 查询状态等于1 的菜品
+        queryWrapper.eq(Dish::getStatus(),1);
         // 添加排序条件
         queryWrapper.orderByAsc(Dish::getSort).orderByDesc(Dish::getUpdateTime);
 
+        // 调用接口进行查询
         List<Dish> list = dishService.list(queryWrapper);
         return R.success(list);
     }

@@ -79,6 +79,8 @@ public class CategoryController {
     /**
      * 根据条件查询分类数据
      * 页面发送ajax请求，请求服务器获取菜品分类i数据并且展示在下拉框中  所以需要传回所有的菜品种类
+     * type = 1 表示菜品分类   type = 2表示套餐分类
+     * 页面发送ajax请求 请求服务端获取套餐分类数据并且展示到下拉框中
      * @param category
      * @return
      */
@@ -88,7 +90,7 @@ public class CategoryController {
         // 条件构造器  创建条件构造器
         LambdaQueryWrapper<Category> objectLambdaQueryWrapper = new LambdaQueryWrapper<>();
 
-        // 添加条件
+        // 添加条件  表示选择分类来构造条件
         objectLambdaQueryWrapper.eq(category.getType()!=null,Category::getType,category.getType());
 
         // 添加排序条件
