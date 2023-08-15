@@ -1,7 +1,6 @@
 package com.itheima.reggie.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itheima.reggie.dto.DishDto;
 import com.itheima.reggie.entity.Category;
@@ -65,7 +64,6 @@ public class DishController {
      * @param name
      * @return
      */
-    @GetMapping("/page")
     public R<Page>  page(int page, int pageSize, String name){
         // 构建分页构造器对象
         Page<Dish> pageInfo = new Page<>(page,pageSize);
@@ -111,7 +109,6 @@ public class DishController {
      * @param id
      * @return
      */
-    @GetMapping("/{id}")
     public  R<DishDto> get(@PathVariable Long id){
         DishDto byIdWithFlavor = dishService.getByIdWithFlavor(id);
         return R.success(byIdWithFlavor);
@@ -138,7 +135,6 @@ public class DishController {
      * @param dish
      * @return
      */
-    @GetMapping("/list")
     public R<List<Dish>>  list(Dish dish){
         // 构造查询条件
         LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();

@@ -129,7 +129,6 @@ public class EmployeeController {
      * @param name
      * @return
      */
-    @GetMapping("/pages")
     public R<Page> pages(int page,int pageSize,String name){
 
         log.info("page = {},pageSize = {},name = {}",page,pageSize,name);
@@ -159,7 +158,6 @@ public class EmployeeController {
      * @param name
      * @return
      */
-    @GetMapping("/page")
     public R<Page> page(int page,int pageSize,String name){
         log.info("page = {},pageSize = {},name = {}" ,page,pageSize,name);
 
@@ -234,7 +232,6 @@ public class EmployeeController {
      * @return
      */
 
-    @GetMapping("/{id}")
     public R<Employee> getById(@PathVariable Long id){
         // 根据员工id来查询员工信息
         log.info("根据员工Id查询信息");

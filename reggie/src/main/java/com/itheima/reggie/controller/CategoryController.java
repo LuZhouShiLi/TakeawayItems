@@ -37,7 +37,6 @@ public class CategoryController {
      * 分页查询
      *
      */
-    @GetMapping("/page")
     public R<Page> page(int page, int pageSize){
         // 分页构造器
         Page<Category> pageInfo = new Page<>(page,pageSize);
@@ -84,7 +83,6 @@ public class CategoryController {
      * @param category
      * @return
      */
-    @GetMapping("/list")
     public R<List<Category>> list(Category category){
 
         // 条件构造器  创建条件构造器
