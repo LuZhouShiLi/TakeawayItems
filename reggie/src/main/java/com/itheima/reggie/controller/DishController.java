@@ -147,7 +147,7 @@ public class DishController {
         queryWrapper.eq(dish.getCategoryId() != null,Dish::getCategoryId,dish.getCategoryId());
 
         // 查询状态等于1 的菜品
-        queryWrapper.eq(Dish::getStatus(),1);
+        queryWrapper.eq(Dish::getStatus,1);
         // 添加排序条件
         queryWrapper.orderByAsc(Dish::getSort).orderByDesc(Dish::getUpdateTime);
 

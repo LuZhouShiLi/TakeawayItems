@@ -15,5 +15,6 @@ public class SetmealDto extends Setmeal {
     // 表示一个套餐的所有菜品
     private List<SetmealDish> setmealDishes;// 菜品
 
+    // 只扩展了一个属性
     private String categoryName;
 }

@@ -31,7 +31,9 @@ public class SetmealController {
     public R<String> save(@RequestBody SetmealDto setmealDto){
 
         log.info("套餐信息;{}",setmealDto);
-        return null;
+
+        setmealService.saveWithDish(setmealDto);
+        return R.success("新增套餐成功");
     }
 
 }
