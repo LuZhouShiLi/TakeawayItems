@@ -74,81 +74,28 @@ public class EmployeeController {
 
     /**
      * 新增员工
-     * 页面发送ajax请求 将新增员工页面中输入的数据以json对象的形式提交到服务端
-     * 服务端Controller接受页面提交的数据并且调用Service 将数据 进行保存
-     * Service 调用mAPPER操作数据库  保存数据、
-     * RequestBody 保证请求的数据是json对象格式发送的
      * @param employee
      * @return
      */
     @PostMapping
     public R<String> save(HttpServletRequest request,@RequestBody Employee employee){
-        // 在这里打断点  发送的请求 执行到这里 停止
         log.info("新增员工，员工信息：{}",employee.toString());
 
-        // 设置初始密码  123456  需要进行Md5加密处理
+        //设置初始密码123456，需要进行md5加密处理
         employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
 
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
+        //employee.setCreateTime(LocalDateTime.now());
+        //employee.setUpdateTime(LocalDateTime.now());
 
-        // 获得当前登录用户的id
-        Long emp = (Long)request.getSession().getAttribute("employee");// 从session获取当前登录用户
+        //获得当前登录用户的id
+        //Long empId = (Long) request.getSession().getAttribute("employee");
 
-        employee.setCreateUser(emp);
-        employee.setUpdateUser(emp);
+        //employee.setCreateUser(empId);
+        //employee.setUpdateUser(empId);
 
-        employeeService.save(employee);// 保存结果  调用service接口
-
-//        //设置初始密码123456，需要进行md5加密处理
-//        employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
-//
-//        employee.setCreateTime(LocalDateTime.now());
-//        employee.setUpdateTime(LocalDateTime.now());
-//
-//        //获得当前登录用户的id
-//        Long empId = (Long) request.getSession().getAttribute("employee");
-//
-//        employee.setCreateUser(empId);
-//        employee.setUpdateUser(empId);
-//
-//        employeeService.save(employee);
+        employeeService.save(employee);
 
         return R.success("新增员工成功");
-    }
-
-    // 分页查询
-    /**
-     * 页面发送ajax请求  将分页查询参数 page pageSize name提交到服务端
-     * 服务端Controller接受页面提交的数据并且调用service 查询数据
-     * Service 调用Mapper 操作数据库 查询分页数据
-     * Controller 将查询到的分页数据相应给页面
-     * 页面接收到页面数据并且通过elementUI的组件 展示到页面上
-     * @param page
-     * @param pageSize
-     * @param name
-     * @return
-     */
-    public R<Page> pages(int page,int pageSize,String name){
-
-        log.info("page = {},pageSize = {},name = {}",page,pageSize,name);
-
-        // 构造分页构造器
-        Page pageInfo = new Page(page,pageSize);
-
-        // 构造条件构造器  需要指定泛型
-        LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
-
-        // 添加过滤条件
-        queryWrapper.like(StringUtils.isNotEmpty(name),Employee::getName,name);
-
-        // 添加排序条件
-        queryWrapper.orderByDesc(Employee::getUpdateTime);
-
-        // 执行查询
-        employeeService.page(pageInfo,queryWrapper);
-
-        return R.success(pageInfo);
     }
 
     /**
@@ -158,6 +105,7 @@ public class EmployeeController {
      * @param name
      * @return
      */
+    @GetMapping("/page")
     public R<Page> page(int page,int pageSize,String name){
         log.info("page = {},pageSize = {},name = {}" ,page,pageSize,name);
 
@@ -182,75 +130,32 @@ public class EmployeeController {
      * @param employee
      * @return
      */
-//    @PutMapping
-//    public R<String> update(HttpServletRequest request,@RequestBody Employee employee){
-//        log.info(employee.toString());
-//
-//        Long empId = (Long)request.getSession().getAttribute("employee");
-//        employee.setUpdateTime(LocalDateTime.now());
-//        employee.setUpdateUser(empId);
-//        employeeService.updateById(employee);
-//
-//        return R.success("员工信息修改成功");
-//    }
-
-    /**
-     * 根据id修改员工的信息
-     * 页面发送ajax请求，将参数 id status 提交到服务器   json对象
-     * 服务端Controller 接受页面提交的数据 并且调用Service 更新数据
-     * Service 调用Mapper操作数据库
-     *
-     * 页面传输的id 需要转换成字符串形式  防止 精度确实
-     *
-     * 编辑员工信息之后 点击确定之后 也会调用update  将表单信息封装成Json对象
-     * @param employee
-     * @return
-     */
     @PutMapping
     public R<String> update(HttpServletRequest request,@RequestBody Employee employee){
+        log.info(employee.toString());
 
-        // 前端点击禁用按钮  ajax发送一个请求 将员工信息 封装起来  发送给服务器  但是前端只传输 id 和status 这两个字段  其他的字段都是空
-        log.info((employee.toString()));
+        long id = Thread.currentThread().getId();
+        log.info("线程id为：{}",id);
+        //Long empId = (Long)request.getSession().getAttribute("employee");
+        //employee.setUpdateTime(LocalDateTime.now());
+        //employee.setUpdateUser(empId);
+        employeeService.updateById(employee);
 
-        // 填充一些其他信息
-        employee.setUpdateTime(LocalDateTime.now());
-        // 从session获取当前用户的id
-        Long employee1 = (Long) request.getSession().getAttribute("employee");
-        employee.setUpdateUser(employee1);
-
-        employeeService.updateById(employee);// 调用service接口  修改员工信息
         return R.success("员工信息修改成功");
     }
 
-
-
-
     /**
      * 根据id查询员工信息
-     * 点击编辑按钮  首先页面就会根据员工的Id 发送一个请求  进行回显操作 也就是查询员工的信息
      * @param id
      * @return
      */
-
+    @GetMapping("/{id}")
     public R<Employee> getById(@PathVariable Long id){
-        // 根据员工id来查询员工信息
-        log.info("根据员工Id查询信息");
+        log.info("根据id查询员工信息...");
         Employee employee = employeeService.getById(id);
-
         if(employee != null){
-            return R.success(employee);// 返回code 1  msg  null  data就是对象
+            return R.success(employee);
         }
-
-
-        return R.error("没有查询到员工信息");
+        return R.error("没有查询到对应员工信息");
     }
-//    @GetMapping("/{id}")
-//    public R<Employee> getById(@PathVariable Long id){
-//        log.info("根据id查询员工信息...");
-//        Employee employee = employeeService.getById(id);
-//        if(employee != null){
-//            return R.success(employee);
-//        }
-//        return R.error("没有查询到对应员工信息");
-//    }
 }

@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * 套餐菜品关系  每一个菜品和套餐之间的关系  所以会包含套餐的属性Id
+ * 套餐菜品关系
  */
 @Data
 public class SetmealDish implements Serializable {

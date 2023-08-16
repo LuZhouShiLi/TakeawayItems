@@ -34,7 +34,6 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
 
     /**
      * 设置静态资源映射
-     * 将静态资源 按照指定路径进行映射
      * @param registry
      */
     @Override
